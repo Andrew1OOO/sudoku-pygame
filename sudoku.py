@@ -12,16 +12,19 @@ board = [
     [0,3,1,8,0,0,0,2,0],
     [0,0,0,9,7,3,0,0,0]
 ]
-def backTrack(board):
+def backTrack(screen, board, font):
     find = find_empty(board)
     if not find:
         return True;
     else:
         row, col = find;
+    update_screen(screen)
     for i in range(1,10):
+        
         if(check_number(board,i,(row,col))):
             board[row][col] = i;
-            if(backTrack(board)):
+            
+            if(backTrack(screen,board, font)):
                 return True
             board[row][col] = 0;
     return False;""
@@ -67,9 +70,9 @@ def draw_board(font, screen):
     for i in range(len(board)):
         for j in range(len(board[0])):
             if(board[j][i] != 0):
-                buttons.append(Button(font, (0,255,255), (i*39, j*39, i*39+39, j*39+39), str(board[j][i])))
+                buttons.append(Button(font, (0,255,255), (i*39, j*39, 39, 39), str(board[j][i])))
             else:
-                buttons.append(Button(font, (0,255,255), (i*39, j*39, i*39+39, j*39+39), ""))
+                buttons.append(Button(font, (0,255,255), (i*39, j*39, 39, 39), ""))
 
     return buttons
 def draw_lines(screen,width,height):
@@ -85,9 +88,28 @@ def draw_lines(screen,width,height):
         else:
             pygame.gfxdraw.line(screen, 0, j * 39, width, j*39, (0,0,0))
 
+def update_screen(screen):
+    pygame.event.pump()
+    buttons = draw_board(font, canvas)
+    for i, button in enumerate(buttons):    
+        button.render(screen)
+    
+    draw_lines(screen, 350,350)  
+    
+    
+    window.blit(screen, (25,25))
 
-def change_color(pos):
-    pass
+    pygame.display.update()
+
+
+def encrypt(position):
+    start = (25,25)
+    size = 39
+    for j in range(1,10):
+        for i in range(1,10):
+            if position[0] <= (start[0]+size*i) and position[1] <= (start[1] + (size*j)) and position[0] > (start[0]+(size*(i-1)) and position[1] > start[1]+size*(j-1)):
+                return j-1,i-1
+
 pygame.init()
 pygame.font.init()
 
@@ -106,25 +128,60 @@ while running:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
-            change_color(pos)
-            for button in buttons:
+            #print(encrypt(pos))
+            for i,button in enumerate(buttons):
                 if(button.is_clicked(pos)):
-                    button.color = (0,0,0)
+                    button.color = (255,0,0)
                     button.render(canvas)
         if event.type == pygame.KEYDOWN:
-            buttons = draw_board(font, canvas)
+            for button in buttons:
+                if event.key == pygame.K_1 and button.color == (255,0,0):
+                    #button.value = "1"
+                    board[encrypt(pos)[0]][encrypt(pos)[1]] = 1 
+                    
+                    #button.color = (0,255,255)
+                if event.key == pygame.K_2 and button.color == (255,0,0):
+                    #button.value = "2"
+                    board[encrypt(pos)[0]][encrypt(pos)[1]] = 2 
+                    #button.color = (0,255,255)
+                if event.key == pygame.K_3 and button.color == (255,0,0):
+                    #button.value = "3"
+                    board[encrypt(pos)[0]][encrypt(pos)[1]] = 3 
+                    #button.color = (0,255,255)
+                if event.key == pygame.K_4 and button.color == (255,0,0):
+                   # button.value = "4"
+                    board[encrypt(pos)[0]][encrypt(pos)[1]] = 4 
+                   # button.color = (0,255,255)
+                if event.key == pygame.K_5 and button.color == (255,0,0):
+                   # button.value = "5"
+                    board[encrypt(pos)[0]][encrypt(pos)[1]] = 5 
+                  #  button.color = (0,255,255)
+                if event.key == pygame.K_6 and button.color == (255,0,0):
+                  #  button.value = "6"
+                    board[encrypt(pos)[0]][encrypt(pos)[1]] = 6 
+                  #  button.color = (0,255,255)
+                if event.key == pygame.K_7 and button.color == (255,0,0):
+                  #  button.value = "7"
+                    board[encrypt(pos)[0]][encrypt(pos)[1]] = 7 
+                  #  button.color = (0,255,255)
+                if event.key == pygame.K_8 and button.color == (255,0,0):
+                  #  button.value = "8"
+                    board[encrypt(pos)[0]][encrypt(pos)[1]] = 8 
+                  #  button.color = (0,255,255)
+                if event.key == pygame.K_9 and button.color == (255,0,0):
+                   #$ button.value = "9"
+                    board[encrypt(pos)[0]][encrypt(pos)[1]] = 9 
+                  #  button.color = (0,255,255)
+            if(event.key == pygame.K_r):
+                backTrack(canvas, board, font)
+                #buttons = draw_board(font, canvas)
+    
+        
     
     
-    
-    
-    for i, button in enumerate(buttons):    
-        button.render(canvas)
-    draw_lines(canvas, 350,350)
-    
-    
-    window.blit(canvas, (25,25))
+    update_screen(canvas)
 
-
+    
     
 
     #canvas.fill((0, 255, 255))

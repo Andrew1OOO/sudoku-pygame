@@ -14,7 +14,6 @@ class Button:
 
 	# Renders the button and the centered textx
     def render(self, screen):
-        
         pygame.draw.rect(screen, self.color, self.rect)
         text = self.font.render((self.value), True, (0,0,0))
         screen.blit(text, (self.rect[0]+10, self.rect[1]+10))
